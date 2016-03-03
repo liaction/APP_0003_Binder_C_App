@@ -5,6 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <linux/types.h>
+#include<stdbool.h>
+#include <string.h>
+
+#include <private/android_filesystem_config.h>
 
 #include "binder.h"
 #include "test_server.h"
@@ -99,7 +104,7 @@ int hello_service_handler(struct binder_state *bs,
         break;
 
     default:
-        ALOGE("unknown code %d\n", txn->code);
+        fprintf(stderr, "unknown code %d\n", txn->code);
         return -1;
     }
 
@@ -121,12 +126,12 @@ int main(int argc, char **argv)
     }
 
 	/* add service */
-	ret = svcmgr_publish(bs, svcmgr, "hello", 123);
+	ret = svcmgr_publish(bs, svcmgr, "hello", (void *)123);
     if (!ret) {
         fprintf(stderr, "failed to publish hello service\n");
         return -1;
     }
-	ret = svcmgr_publish(bs, svcmgr, "goodbye", 123);
+	ret = svcmgr_publish(bs, svcmgr, "goodbye", (void *)123);
     if (!ret) {
         fprintf(stderr, "failed to publish goodbye service\n");
     }
