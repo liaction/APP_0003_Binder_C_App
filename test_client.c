@@ -52,6 +52,7 @@ void sayhello(void)
 	/* 构造binder_io */
     bio_init(&msg, iodata, sizeof(iodata), 4);
     bio_put_uint32(&msg, 0);  // strict mode header
+    bio_put_string16_x(&msg, "IHelloService");
 
 	/* 放入参数 */
 
@@ -70,10 +71,12 @@ int sayhello_to(char *name)
 	unsigned iodata[512/4];
 	struct binder_io msg, reply;
 	int ret;
+	int exception;
 
 	/* 构造binder_io */
 	bio_init(&msg, iodata, sizeof(iodata), 4);
 	bio_put_uint32(&msg, 0);  // strict mode header
+    bio_put_string16_x(&msg, "IHelloService");
 
 	/* 放入参数 */
     bio_put_string16_x(&msg, name);
@@ -83,7 +86,11 @@ int sayhello_to(char *name)
 		return 0;
 	
 	/* 从reply中解析出返回值 */
-	ret = bio_get_uint32(&reply);
+	exception = bio_get_uint32(&reply);
+	if (exception)
+		ret = -1;
+	else
+		ret = bio_get_uint32(&reply);
 
 	binder_done(g_bs, &msg, &reply);
 
@@ -100,6 +107,7 @@ void saygoodbye(void)
 	/* 构造binder_io */
     bio_init(&msg, iodata, sizeof(iodata), 4);
     bio_put_uint32(&msg, 0);  // strict mode header
+    bio_put_string16_x(&msg, "IGoodbyeService");
 
 	/* 放入参数 */
 
@@ -118,10 +126,12 @@ int saygoodbye_to(char *name)
 	unsigned iodata[512/4];
 	struct binder_io msg, reply;
 	int ret;
+	int exception;
 
 	/* 构造binder_io */
 	bio_init(&msg, iodata, sizeof(iodata), 4);
 	bio_put_uint32(&msg, 0);  // strict mode header
+    bio_put_string16_x(&msg, "IGoodbyeService");
 
 	/* 放入参数 */
     bio_put_string16_x(&msg, name);
@@ -131,7 +141,11 @@ int saygoodbye_to(char *name)
 		return 0;
 	
 	/* 从reply中解析出返回值 */
-	ret = bio_get_uint32(&reply);
+	exception = bio_get_uint32(&reply);
+	if (exception)
+		ret = -1;
+	else
+		ret = bio_get_uint32(&reply);
 
 	binder_done(g_bs, &msg, &reply);
 

@@ -39,28 +39,28 @@ int svcmgr_publish(struct binder_state *bs, uint32_t target, const char *name, v
 void sayhello(void)
 {
 	static int cnt = 0;
-	fprintf(stderr, "say hello : %d\n", cnt++);
+	fprintf(stderr, "say hello : %d\n", ++cnt);
 }
 
 
 int sayhello_to(char *name)
 {
 	static int cnt = 0;
-	fprintf(stderr, "say hello to %s : %d\n", name, cnt++);
+	fprintf(stderr, "say hello to %s : %d\n", name, ++cnt);
 	return cnt;
 }
 
 void saygoodbye(void)
 {
 	static int cnt = 0;
-	fprintf(stderr, "say goodbye : %d\n", cnt++);
+	fprintf(stderr, "say goodbye : %d\n", ++cnt);
 }
 
 
 int saygoodbye_to(char *name)
 {
 	static int cnt = 0;
-	fprintf(stderr, "say goodbye to %s : %d\n", name, cnt++);
+	fprintf(stderr, "say goodbye to %s : %d\n", name, ++cnt);
 	return cnt;
 }
 
@@ -97,11 +97,13 @@ int hello_service_handler(struct binder_state *bs,
     switch(txn->code) {
     case HELLO_SVR_CMD_SAYHELLO:
 		sayhello();
+		bio_put_uint32(reply, 0); /* no exception */
         return 0;
 
     case HELLO_SVR_CMD_SAYHELLO_TO:
 		/* 从msg里取出字符串 */
-		s = bio_get_string16(msg, &len);
+		s = bio_get_string16(msg, &len);  //"IHelloService"
+		s = bio_get_string16(msg, &len);  // name
 		if (s == NULL) {
 			return -1;
 		}
@@ -113,6 +115,7 @@ int hello_service_handler(struct binder_state *bs,
 		i = sayhello_to(name);
 
 		/* 把结果放入reply */
+		bio_put_uint32(reply, 0); /* no exception */
 		bio_put_uint32(reply, i);
 		
         break;
@@ -159,11 +162,13 @@ int goodbye_service_handler(struct binder_state *bs,
     switch(txn->code) {
     case GOODBYE_SVR_CMD_SAYGOODBYE:
 		saygoodbye();
+		bio_put_uint32(reply, 0); /* no exception */
         return 0;
 
     case GOODBYE_SVR_CMD_SAYGOODBYE_TO:
 		/* 从msg里取出字符串 */
-		s = bio_get_string16(msg, &len);
+		s = bio_get_string16(msg, &len);  //"IGoodbyeService"
+		s = bio_get_string16(msg, &len);  // name
 		if (s == NULL) {
 			return -1;
 		}
@@ -175,6 +180,7 @@ int goodbye_service_handler(struct binder_state *bs,
 		i = saygoodbye_to(name);
 
 		/* 把结果放入reply */
+		bio_put_uint32(reply, 0); /* no exception */
 		bio_put_uint32(reply, i);
 		
         break;
