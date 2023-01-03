@@ -49,18 +49,18 @@ void sayhello(void)
     unsigned iodata[512/4];
     struct binder_io msg, reply;
 
-	/* ¹¹Ôìbinder_io */
+	/* æ„é€ binder_io */
     bio_init(&msg, iodata, sizeof(iodata), 4);
     bio_put_uint32(&msg, 0);  // strict mode header
     bio_put_string16_x(&msg, "IHelloService");
 
-	/* ·ÅÈë²ÎÊı */
+	/* æ”¾å…¥å‚æ•° */
 
-	/* µ÷ÓÃbinder_call */
+	/* è°ƒç”¨binder_call */
     if (binder_call(g_bs, &msg, &reply, g_hello_handle, HELLO_SVR_CMD_SAYHELLO))
         return ;
 	
-	/* ´ÓreplyÖĞ½âÎö³ö·µ»ØÖµ */
+	/* ä»replyä¸­è§£æå‡ºè¿”å›å€¼ */
 
     binder_done(g_bs, &msg, &reply);
 	
@@ -73,19 +73,19 @@ int sayhello_to(char *name)
 	int ret;
 	int exception;
 
-	/* ¹¹Ôìbinder_io */
+	/* æ„é€ binder_io */
 	bio_init(&msg, iodata, sizeof(iodata), 4);
 	bio_put_uint32(&msg, 0);  // strict mode header
     bio_put_string16_x(&msg, "IHelloService");
 
-	/* ·ÅÈë²ÎÊı */
+	/* æ”¾å…¥å‚æ•° */
     bio_put_string16_x(&msg, name);
 
-	/* µ÷ÓÃbinder_call */
+	/* è°ƒç”¨binder_call */
 	if (binder_call(g_bs, &msg, &reply, g_hello_handle, HELLO_SVR_CMD_SAYHELLO_TO))
 		return 0;
 	
-	/* ´ÓreplyÖĞ½âÎö³ö·µ»ØÖµ */
+	/* ä»replyä¸­è§£æå‡ºè¿”å›å€¼ */
 	exception = bio_get_uint32(&reply);
 	if (exception)
 		ret = -1;
@@ -104,18 +104,18 @@ void saygoodbye(void)
     unsigned iodata[512/4];
     struct binder_io msg, reply;
 
-	/* ¹¹Ôìbinder_io */
+	/* æ„é€ binder_io */
     bio_init(&msg, iodata, sizeof(iodata), 4);
     bio_put_uint32(&msg, 0);  // strict mode header
     bio_put_string16_x(&msg, "IGoodbyeService");
 
-	/* ·ÅÈë²ÎÊı */
+	/* æ”¾å…¥å‚æ•° */
 
-	/* µ÷ÓÃbinder_call */
+	/* è°ƒç”¨binder_call */
     if (binder_call(g_bs, &msg, &reply, g_goodbye_handle, GOODBYE_SVR_CMD_SAYGOODBYE))
         return ;
 	
-	/* ´ÓreplyÖĞ½âÎö³ö·µ»ØÖµ */
+	/* ä»replyä¸­è§£æå‡ºè¿”å›å€¼ */
 
     binder_done(g_bs, &msg, &reply);
 	
@@ -128,19 +128,19 @@ int saygoodbye_to(char *name)
 	int ret;
 	int exception;
 
-	/* ¹¹Ôìbinder_io */
+	/* æ„é€ binder_io */
 	bio_init(&msg, iodata, sizeof(iodata), 4);
 	bio_put_uint32(&msg, 0);  // strict mode header
     bio_put_string16_x(&msg, "IGoodbyeService");
 
-	/* ·ÅÈë²ÎÊı */
+	/* æ”¾å…¥å‚æ•° */
     bio_put_string16_x(&msg, name);
 
-	/* µ÷ÓÃbinder_call */
+	/* è°ƒç”¨binder_call */
 	if (binder_call(g_bs, &msg, &reply, g_goodbye_handle, GOODBYE_SVR_CMD_SAYGOODBYE_TO))
 		return 0;
 	
-	/* ´ÓreplyÖĞ½âÎö³ö·µ»ØÖµ */
+	/* ä»replyä¸­è§£æå‡ºè¿”å›å€¼ */
 	exception = bio_get_uint32(&reply);
 	if (exception)
 		ret = -1;
